@@ -1,0 +1,27 @@
+{
+    "name": "@accesstimeio/accesstime-sdk",
+    "license": "MIT",
+    "version": "0.0.1",
+    "description": "SDK for building applications with AccessTime",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "repository": "https://github.com/accesstimeio/accesstime-sdk",
+    "keywords": [
+        "accesstime",
+        "sdk",
+        "ethereum"
+    ],
+    "module": "dist/index.mjs",
+    "scripts": {
+        "build": "tsup src/index.ts --format cjs,esm --clean --splitting --dts-resolve --sourcemap"
+    },
+    "dependencies": {
+        "viem": "^2.21.24"
+    },
+    "devDependencies": {
+        "tsup": "^8.3.0"
+    }
+}
