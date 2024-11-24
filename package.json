@@ -20,7 +20,7 @@
     ],
     "module": "dist/index.mjs",
     "scripts": {
-        "build": "tsup src/index.ts --format cjs,esm --clean --splitting --dts-resolve --sourcemap"
+        "build": "tsup"
     },
     "dependencies": {
         "viem": "^2.21.24"
