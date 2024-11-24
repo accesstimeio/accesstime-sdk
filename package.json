@@ -1,8 +1,12 @@
 {
     "name": "@accesstimeio/accesstime-sdk",
     "license": "MIT",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "SDK for building applications with AccessTime",
+    "author": {
+        "name": "AccessTime",
+        "url": "https://github.com/accesstimeio"
+    },
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
     "files": [
