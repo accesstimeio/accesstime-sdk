@@ -1,3 +1,4 @@
+import { Chain, Contract } from "@accesstimeio/accesstime-common";
 import {
     Address,
     createPublicClient,
@@ -5,10 +6,8 @@ import {
     getAddress,
     getContract,
     http,
-    parseAbi,
     PublicClient
 } from "viem";
-import { SUPPORTED_CHAIN_IDS } from "./config";
 
 interface ChainConfig {
     id: number,
@@ -25,7 +24,7 @@ export class Client {
     private publicClient: PublicClient;
 
     constructor(config: ClientConfig) {
-        if (!SUPPORTED_CHAIN_IDS.includes(config.chain.id)) {
+        if (!Chain.ids.includes(config.chain.id)) {
             throw new Error("Given chain is not supported!");
         }
         this.publicClient = createPublicClient({
@@ -49,12 +48,7 @@ export class Client {
     private getContract() {
         return getContract({
             address: this.accessTime,
-            abi: parseAbi([
-                "function accessTimes(address client) view returns (uint256 time)",
-                "event Purchased(address indexed user, uint256 indexed amount, address indexed paymentToken)",
-                "event PurchasedPackage(address indexed user, uint256 indexed amount, address indexed paymentToken, uint256 packageID)",
-                "event ExtraTimed(address indexed user, uint256 indexed unixTime, uint256 indexed newTime)"
-            ]),
+            abi: Contract.abis.accessTime,
             client: this.publicClient
         })
     }

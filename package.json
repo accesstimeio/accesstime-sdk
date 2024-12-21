@@ -1,7 +1,7 @@
 {
     "name": "@accesstimeio/accesstime-sdk",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "SDK for building applications with AccessTime",
     "author": {
         "name": "AccessTime",
@@ -23,6 +23,7 @@
         "build": "tsup"
     },
     "dependencies": {
+        "@accesstimeio/accesstime-common": "^1.0.5",
         "viem": "^2.21.24"
     },
     "devDependencies": {
