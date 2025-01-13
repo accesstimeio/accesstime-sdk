@@ -1,80 +1,46 @@
-import { Chain, Contract } from "@accesstimeio/accesstime-common";
+import { Chain } from "@accesstimeio/accesstime-common";
 import {
-    Address,
     createPublicClient,
     defineChain,
-    getAddress,
-    getContract,
     http,
-    PublicClient
+    PublicClient,
+    Chain as ChainType
 } from "viem";
 
-interface ChainConfig {
+export interface ClientConfig {
     id: number,
-    rpcUrl: string,
-}
-
-interface ClientConfig {
-    chain: ChainConfig,
-    accessTime: Address
+    rpcUrl?: string,
 }
 
 export class Client {
-    private accessTime: Address;
-    private publicClient: PublicClient;
+    public publicClient: PublicClient;
 
     constructor(config: ClientConfig) {
-        if (!Chain.ids.includes(config.chain.id)) {
+        if (!Chain.ids.includes(config.id)) {
             throw new Error("Given chain is not supported!");
         }
+
+        const preChainConfig = Chain.wagmiConfig.find((chain) => chain.id == config.id);
+        const userProvidedChainConfig = config.rpcUrl && defineChain({
+            id: config.id,
+            name: 'Localhost',
+            nativeCurrency: {
+                decimals: 18,
+                name: 'Ether',
+                symbol: 'ETH',
+            },
+            rpcUrls: {
+                default: { http: [config.rpcUrl] },
+            },
+        });
+
+        if (!preChainConfig && !userProvidedChainConfig) {
+            throw new Error("Chain config is not found!");
+        }
+
         this.publicClient = createPublicClient({
             transport: http(),
-            chain: defineChain({
-                id: config.chain.id,
-                name: 'Localhost',
-                nativeCurrency: {
-                    decimals: 18,
-                    name: 'Ether',
-                    symbol: 'ETH',
-                },
-                rpcUrls: {
-                    default: { http: [config.chain.rpcUrl] },
-                },
-            })
+            chain: userProvidedChainConfig as ChainType || preChainConfig as ChainType
         });
-        this.accessTime = getAddress(config.accessTime);
-    }
-
-    private getContract() {
-        return getContract({
-            address: this.accessTime,
-            abi: Contract.abis.accessTime,
-            client: this.publicClient
-        })
-    }
-
-    async getUserAccessTime(address: Address) {
-        return await this.getContract().read.accessTimes([address]);
-    }
-
-    watchUserPurchase(address: Address, onLogs: (logs: any) => void) {
-        return this.getContract().watchEvent.Purchased(
-            { user: address },
-            { onLogs: (logs) => onLogs(logs) },
-        )
-    }
-
-    watchUserPurchasePackage(address: Address, onLogs: (logs: any) => void) {
-        return this.getContract().watchEvent.PurchasedPackage(
-            { user: address },
-            { onLogs: (logs) => onLogs(logs) },
-        )
-    }
-
-    watchUserExtraTimed(address: Address, onLogs: (logs: any) => void) {
-        return this.getContract().watchEvent.ExtraTimed(
-            { user: address },
-            { onLogs: (logs) => onLogs(logs) },
-        )
     }
 }
