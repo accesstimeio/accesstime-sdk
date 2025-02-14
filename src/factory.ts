@@ -1,4 +1,4 @@
-import { Contract, getFactoryAddress } from "@accesstimeio/accesstime-common";
+import { Contract, getFactoryAddress, SUPPORTED_CHAIN } from "@accesstimeio/accesstime-common";
 import { getContract } from "viem";
 
 import { Client, ClientConfig } from "./client";
@@ -12,7 +12,7 @@ export class Factory extends Client {
 
     constructor(config: ClientConfig) {
         super(config);
-        const address = getFactoryAddress(config.id);
+        const address = getFactoryAddress(config.id as SUPPORTED_CHAIN);
 
         const readABI = Contract.abis.factory.filter((abi) => abi.type == "function" && abi.stateMutability == "view");
         const readContract = getContract({

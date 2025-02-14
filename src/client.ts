@@ -1,4 +1,4 @@
-import { Chain } from "@accesstimeio/accesstime-common";
+import { Chain, SUPPORTED_CHAIN } from "@accesstimeio/accesstime-common";
 import {
     createPublicClient,
     defineChain,
@@ -16,7 +16,7 @@ export class Client {
     public publicClient: PublicClient;
 
     constructor(config: ClientConfig) {
-        if (!Chain.ids.includes(config.id)) {
+        if (!Chain.ids.includes(config.id as SUPPORTED_CHAIN)) {
             throw new Error("Given chain is not supported!");
         }
 
